@@ -9,14 +9,21 @@ start (Filename) ->
     VertexList = populate_vertex_list (File),
     MinQueue = lists:sort([V#vertex.num || V <- VertexList]),    
     Tree = find_min_tree (MinQueue, VertexList),
-    %print_path (Tree),
-    io:format ("~w~n", [Tree]),
+    print_path (Tree),
+    %io:format ("~w~n", [Tree]),
     file:close (File).   
 
 print_path ([]) ->
     ok;
+print_path ([H |T]) when H#vertex.parent == null ->
+    Cost = lists:foldr(fun(X, Y) -> X#vertex.min_distance+Y end, 0, T),
+    io:format ("Cost of tree: ~w~n", [Cost]),
+    io:format ("Edges picked:~n"),
+    print_path (T);
 print_path ([H |T]) ->
-    io:format ("~w~n", [hd(list:reverse(H#vertex.min_adj_list))]).
+    io:format ("(~w, ~w) cost: ~w~n", [H#vertex.parent, H#vertex.num, 
+                                       H#vertex.min_distance]),
+    print_path (T).
 
 populate_vertex_list (File) ->
     populate_vertex_list (File, []).
@@ -33,7 +40,7 @@ populate_vertex_list (File, VertexList) ->
                                                          string:tokens (Line, " ")),
             NewVertexList = update_vertex_list (V1, V2, Weight, VertexList),
             NewNewVertexList = update_vertex_list (V2, V1, Weight, NewVertexList),
-            io:format ("~w ~w ~w~n", [V1, V2, Weight]),
+            %io:format ("~w ~w ~w~n", [V1, V2, Weight]),
             populate_vertex_list (File, NewNewVertexList)
     end.
 
