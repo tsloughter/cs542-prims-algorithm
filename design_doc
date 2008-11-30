@@ -1,0 +1,17 @@
+Design:
+
+Choosing Erlang as the implementation language meant design decisions specific 
+to the fact that Erlang is a functional language with immutable data structures 
+had to be made. In order to track the changes of vertexes the queue did not 
+store the actual vertexes but instead stored the vertex number. This allowed 
+the vertex to be found in a list of the actual vertexes that could be updated 
+separately. Thus, functions were necessary for finding a vertex in the list 
+by its vertex number and updating the vertex list with a replacement vertex 
+and having that return the new vertex list to be used by the program from that 
+point on.
+
+Despite these limitations using Erlang allowed for a clean design. The algorithm 
+easily mapped to small distinct functions. First, the functions for dealing with 
+finding vectors and manipulating the queue and vector list. After this we needed 
+functions for recursing through the vector queue and updating each vectors 
+minimum adjacency list and a function to print the results.
